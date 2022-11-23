@@ -6,7 +6,7 @@ interface IAnimalTypes {
     requiredSpace: number;
     diet: string;
 }
-type Type= 'predator' | 'herbivore';
+type Type = 'predator' | 'herbivore';
 interface IAnimal extends IAnimalTypes {
     aname: string;
     age: number;
@@ -83,11 +83,11 @@ const redFish: IAnimal = {
     diet: "seeds"
 }
 interface IAviaries {
-    name:string,
+    name: string,
     biome: string;
     reservoir: boolean;
     area: number;
-    animals:IAnimal[]
+    animals: IAnimal[]
 }
 const canalization: IAviaries = {
     biome: "canalization",
@@ -118,56 +118,58 @@ const cage2: IAviaries = {
     name: "cage2"
 }
 
-function placeAnimals(animal:IAnimal,enclosure:IAviaries) {
-    if (animal.isNeedfulReservoir===enclosure.reservoir && animal.biome===enclosure.biome && animal.requiredSpace<=enclosure.area) {
-                 
-    console.log(`This enclosure is suitable for ${animal.aname}.`); 
-    checkType(animal,enclosure.animals);
-   
-    return  `${animal.aname} added to ${enclosure.name}`;
-        
+function placeAnimals(animal: IAnimal, enclosure: IAviaries) {
+    if (animal.isNeedfulReservoir === enclosure.reservoir && animal.biome === enclosure.biome && animal.requiredSpace <= enclosure.area) {
+
+        console.log(`This enclosure is suitable for ${animal.aname}.`);
+        if (checkType(animal, enclosure)) {
+            return `${animal.aname} added to ${enclosure.name}`;
+        } else {
+            return `${animal.aname} was not added to ${enclosure.name}`;
+        }
+
     }
-    else{
+    else {
         console.log(`It is impossible to add "${animal.aname}" to enclosure with ${enclosure.area}m area,${enclosure.biome} biome. `);
         return 'That is why adding failed.'
     }
 
 }
-function checkType(animal:IAnimal,animals:IAnimal[]) {
-for (let i = 0; i < animals.length; i++) {
-if ((animals[i].typeofAnimal=='lion' && animal.typeofAnimal=='herbivore') || (animals[i].typeofAnimal=='herbivore' && animal.typeofAnimal=='lion')) {
-    console.log(`This enclosure is not suitable for ${animal.aname},because types of animals are opposite. `);
-    console.log('====================================');
-}
-else{
-    animals.push(animal);
-    
+function checkType(animal: IAnimal, enclosure: IAviaries): boolean {
+    for (let i = 0; i < enclosure.animals.length; i++) {
+        if ((enclosure.animals[i].typeofAnimal == 'lion' && animal.typeofAnimal == 'herbivore') || (enclosure.animals[i].typeofAnimal == 'herbivore' && animal.typeofAnimal == 'lion')) {
+            console.log(`This enclosure is not suitable for ${animal.aname},because types of animals are opposite. `);
+            console.log('====================================');
+            return false;
+        }        
+    }
+    console.log(`check true for enclosure ${enclosure.name}`);
+    enclosure.animals.push(animal);
+    return true;
+    //    return animal && animals
 }
 
-}
-//    return animal && animals
-}
-
-console.log(placeAnimals(lion,cage1));
+console.log(placeAnimals(lion, cage1));
 console.log(placeAnimals(redFish, aquarium));
 console.log(placeAnimals(Rafael, canalization));
 console.log(placeAnimals(turtle, canalization));
 console.log(placeAnimals(elephant, cage2));
 console.log(placeAnimals(elephant2, cage2));
-console.log(placeAnimals(lion,aquarium));
+console.log(placeAnimals(lion, cage2));
 
 console.log('====================================');
 
-function showAnimals(enclosure:IAviaries) {
-console.log(`Animals in ${enclosure.name}:`);
-enclosure.animals.forEach(anm => {
-console.log(anm.aname)
-if (enclosure.animals.length===0) {
-    console.log("This enclosure is empty..");
-    
-}
-return anm.aname
-})
+function showAnimals(enclosure: IAviaries) {
+    console.log(`Animals in ${enclosure.name}:`);
+    console.log(`animals count: ${enclosure.animals.length}`);
+    enclosure.animals.forEach(anm => {
+        console.log(anm)
+        if (enclosure.animals.length === 0) {
+            console.log("This enclosure is empty..");
+
+        }
+        return anm.aname
+    })
 }
 showAnimals(cage1);
 showAnimals(cage2);
@@ -175,4 +177,5 @@ showAnimals(canalization);
 showAnimals(aquarium);
 
 
-console.log(cage2.animals);
+
+

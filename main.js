@@ -99,24 +99,29 @@ var cage2 = {
 function placeAnimals(animal, enclosure) {
     if (animal.isNeedfulReservoir === enclosure.reservoir && animal.biome === enclosure.biome && animal.requiredSpace <= enclosure.area) {
         console.log("This enclosure is suitable for ".concat(animal.aname, "."));
-        checkType(animal, enclosure.animals);
-        return "".concat(animal.aname, " added to ").concat(enclosure.name);
+        if (checkType(animal, enclosure)) {
+            return "".concat(animal.aname, " added to ").concat(enclosure.name);
+        }
+        else {
+            return "".concat(animal.aname, " was not added to ").concat(enclosure.name);
+        }
     }
     else {
         console.log("It is impossible to add \"".concat(animal.aname, "\" to enclosure with ").concat(enclosure.area, "m area,").concat(enclosure.biome, " biome. "));
         return 'That is why adding failed.';
     }
 }
-function checkType(animal, animals) {
-    for (var i = 0; i < animals.length; i++) {
-        if ((animals[i].typeofAnimal == 'lion' && animal.typeofAnimal == 'herbivore') || (animals[i].typeofAnimal == 'herbivore' && animal.typeofAnimal == 'lion')) {
+function checkType(animal, enclosure) {
+    for (var i = 0; i < enclosure.animals.length; i++) {
+        if ((enclosure.animals[i].typeofAnimal == 'lion' && animal.typeofAnimal == 'herbivore') || (enclosure.animals[i].typeofAnimal == 'herbivore' && animal.typeofAnimal == 'lion')) {
             console.log("This enclosure is not suitable for ".concat(animal.aname, ",because types of animals are opposite. "));
             console.log('====================================');
-        }
-        else {
-            animals.push(animal);
+            return false;
         }
     }
+    console.log("check true for enclosure ".concat(enclosure.name));
+    enclosure.animals.push(animal);
+    return true;
     //    return animal && animals
 }
 console.log(placeAnimals(lion, cage1));
@@ -125,12 +130,13 @@ console.log(placeAnimals(Rafael, canalization));
 console.log(placeAnimals(turtle, canalization));
 console.log(placeAnimals(elephant, cage2));
 console.log(placeAnimals(elephant2, cage2));
-console.log(placeAnimals(lion, aquarium));
+console.log(placeAnimals(lion, cage2));
 console.log('====================================');
 function showAnimals(enclosure) {
     console.log("Animals in ".concat(enclosure.name, ":"));
+    console.log("animals count: ".concat(enclosure.animals.length));
     enclosure.animals.forEach(function (anm) {
-        console.log(anm.aname);
+        console.log(anm);
         if (enclosure.animals.length === 0) {
             console.log("This enclosure is empty..");
         }
@@ -141,4 +147,3 @@ showAnimals(cage1);
 showAnimals(cage2);
 showAnimals(canalization);
 showAnimals(aquarium);
-console.log(showAnimals(cage1));
